@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UyoXpress — Move Around Uyo Faster, Smarter, Safer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #0B6E4F;
+    --green-dark: #084F38;
+    --green-light: #E6F4EF;
+    --green-mid: #1A8A63;
+    --lime: #B8F04A;
+    --lime-dark: #9CD938;
+    --white: #FFFFFF;
+    --off-white: #F7F8F6;
+    --gray-100: #F2F3F1;
+    --gray-200: #E4E6E2;
+    --gray-400: #9BA49C;
+    --gray-600: #5C6B5E;
+    --gray-900: #141A15;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-xl: 32px;
+    --shadow-card: 0 2px 20px rgba(11,110,79,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ─────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--gray-200);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--lime);
+    display: inline-block;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--gray-600);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+
+  .nav-cta {
+    background: var(--green);
+    color: var(--white) !important;
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--green-dark) !important; transform: translateY(-1px); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--gray-900);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 20px 24px 28px;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gray-900);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .mobile-menu .m-cta {
+    margin-top: 16px;
+    background: var(--green);
+    color: var(--white);
+    text-align: center;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-weight: 600;
+  }
+
+  /* ── HERO ─────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 100px 24px 80px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(11,110,79,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(184,240,74,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    color: var(--gray-900);
+    margin-bottom: 22px;
+  }
+  h1 span { color: var(--green); }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--gray-600);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 460px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .btn-primary:hover {
+    background: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(11,110,79,0.25);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--green);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--green);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s, color 0.2s;
+  }
+  .btn-secondary:hover {
+    background: var(--green-light);
+    transform: translateY(-2px);
+  }
+
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+  }
+  .hero-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--gray-400);
+    font-weight: 500;
+  }
+  .trust-icon {
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .trust-icon svg { width: 14px; height: 14px; }
+
+  /* ── MOCKUP ───────────────────────────────────── */
+  .mockup-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mockup-bg {
+    position: absolute;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: var(--green-light);
+    z-index: 0;
+    opacity: 0.7;
+  }
+
+  .phone-frame {
+    position: relative;
+    z-index: 1;
+    width: 300px;
+    background: var(--white);
+    border-radius: 36px;
+    border: 2.5px solid var(--gray-200);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 8px 24px rgba(11,110,79,0.10);
+    overflow: hidden;
+    transform: rotate(2deg);
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: rotate(2deg) translateY(0); }
+    50% { transform: rotate(2deg) translateY(-10px); }
+  }
+
+  .phone-notch {
+    height: 32px;
+    background: var(--gray-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .notch-cam {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #333;
+    border: 1.5px solid #555;
+  }
+  .notch-speaker {
+    width: 50px; height: 5px;
+    border-radius: 3px;
+    background: #333;
+  }
+
+  .phone-screen {
+    background: #FAFAFA;
+    padding: 16px 16px 20px;
+  }
+
+  .map-area {
+    width: 100%;
+    height: 160px;
+    border-radius: var(--radius-md);
+    background: #E8F4EE;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .map-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(11,110,79,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,110,79,0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .map-road-h {
+    position: absolute;
+    height: 5px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 3px;
+  }
+  .map-road-v {
+    position: absolute;
+    width: 5px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 3px;
+  }
+  .map-pin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .map-pin-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2.5px solid var(--white);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .map-pin-line {
+    width: 2px;
+    height: 10px;
+    background: inherit;
+    opacity: 0.6;
+  }
+  .car-icon {
+    position: absolute;
+    width: 28px; height: 16px;
+    background: var(--green);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .car-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white); }
+
+  .booking-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .booking-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .booking-field + .booking-field {
+    border-top: 1px solid var(--gray-100);
+  }
+  .field-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .field-dot-green { background: var(--green); }
+  .field-dot-lime { background: var(--lime); }
+  .field-text {
+    flex: 1;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--gray-900);
+    letter-spacing: 0.01em;
+  }
+  .field-text span { display: block; font-size: 10.5px; font-weight: 400; color: var(--gray-400); margin-top: 1px; }
+
+  .booking-footer {
+    background: var(--green);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .booking-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    font-family: var(--font-display);
+  }
+  .booking-btn-sm {
+    background: var(--lime);
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: default;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .floating-card {
+    position: absolute;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    padding: 10px 14px;
+    z-index: 2;
+    animation: float2 5s ease-in-out infinite;
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .fc-left { left: -60px; top: 30%; }
+  .fc-right { right: -55px; bottom: 20%; animation-delay: 2s; }
+  .fc-label { font-size: 10px; font-weight: 500; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .fc-value { font-size: 13px; font-weight: 700; color: var(--gray-900); font-family: var(--font-display); }
+  .fc-green { color: var(--green); }
+
+  /* ── SECTIONS ─────────────────────────────────── */
+  section { padding: 96px 24px; }
+
+  .section-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--gray-900);
+    margin-bottom: 18px;
+  }
+
+  .section-sub {
+    font-size: 16.5px;
+    color: var(--gray-600);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 56px;
+  }
+
+  /* ── FEATURES ─────────────────────────────────── */
+  .features { background: var(--off-white); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .feat-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 32px 26px;
+    border: 1px solid var(--gray-200);
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    cursor: default;
+  }
+  .feat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card);
+    border-color: rgba(11,110,79,0.2);
+  }
+
+  .feat-icon {
+    width: 52px; height: 52px;
+    border-radius: var(--radius-sm);
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .feat-icon svg { width: 24px; height: 24px; }
+
+  .feat-card h3 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .feat-card p {
+    font-size: 14.5px;
+    color: var(--gray-600);
+    line-height: 1.65;
+  }
+
+  /* ── HOW IT WORKS ─────────────────────────────── */
+  .how { background: var(--white); }
+
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute;
+    top: 38px;
+    left: calc(100% / 6);
+    right: calc(100% / 6);
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--green-light) 0%, var(--green) 50%, var(--green-light) 100%);
+    z-index: 0;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-num {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .step:hover .step-num {
+    border-color: var(--green);
+    transform: scale(1.08);
+  }
+  .step-num-inner {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-num-inner svg { width: 22px; height: 22px; }
+
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    letter-spacing: -0.2px;
+  }
+  .step p {
+    font-size: 14.5px;
+    color: var(--gray-600);
+    line-height: 1.65;
+  }
+
+  /* ── COVERAGE ─────────────────────────────────── */
+  .coverage {
+    background: var(--green);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .coverage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .coverage::after {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,240,74,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .coverage-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .coverage h2 { color: var(--white); }
+
+  .coverage-sub {
+    font-size: 16.5px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .area-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .area-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 100px;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, transform 0.15s;
+    cursor: default;
+  }
+  .area-tag:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+  }
+
+  /* City illustration */
+  .city-illustration {
+    position: relative;
+    height: 320px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  /* ── CTA BANNER ────────────────────────────────── */
+  .cta-banner {
+    background: var(--gray-900);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(184,240,74,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-banner h2 {
+    color: var(--white);
+    font-size: clamp(34px, 5vw, 56px);
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .cta-banner h2 span { color: var(--lime); }
+  .cta-banner p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 42px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-lime {
+    background: var(--lime);
+    color: var(--green-dark);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 17px 40px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .btn-lime:hover {
+    background: var(--lime-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(184,240,74,0.3);
+  }
+
+  /* ── FOOTER ────────────────────────────────────── */
+  footer {
+    background: #0A1210;
+    color: rgba(255,255,255,0.65);
+    padding: 70px 24px 36px;
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 36px;
+  }
+
+  .footer-brand .logo {
+    color: var(--white);
+    margin-bottom: 16px;
+    display: inline-flex;
+  }
+  .footer-brand p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+    max-width: 260px;
+  }
+
+  .footer-col h4 {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 18px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 12px; }
+  .footer-col ul li a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .footer-col ul li a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.3); }
+  .footer-bottom a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--white); }
+  .footer-credit { color: rgba(255,255,255,0.4) !important; font-size: 13px !important; }
+  .footer-credit span { color: var(--lime); font-weight: 600; }
+
+  /* ── MODAL ─────────────────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 52px 44px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+  }
+  .modal-icon svg { width: 32px; height: 32px; }
+  .modal-box h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .modal-box p {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+  .modal-close {
+    background: var(--green);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 36px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--green-dark); }
+
+  /* ── ANIMATIONS ────────────────────────────────── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .fc-left, .fc-right { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .mockup-wrap { justify-content: center; }
+    .phone-frame { transform: rotate(0deg); }
+    @keyframes float { 0%,100%{transform:rotate(0deg) translateY(0)} 50%{transform:rotate(0deg) translateY(-10px)} }
+    .coverage-inner { grid-template-columns: 1fr; gap: 40px; }
+    .city-illustration { height: 220px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .footer-brand { grid-column: 1 / -1; }
+    .steps-row::before { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    section { padding: 72px 18px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 90px 18px 60px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr; gap: 36px; }
+    .step { align-items: flex-start; text-align: left; flex-direction: row; gap: 20px; }
+    .step-num { flex-shrink: 0; width: 60px; height: 60px; margin-bottom: 0; }
+    .step-num-inner { width: 44px; height: 44px; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .hero-actions { flex-direction: column; align-items: flex-start; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    .modal-box { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────── -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-dot"></span>UyoXpress
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#coverage">Coverage</a></li>
+      <li><a href="#" class="nav-cta coming-soon">Download App</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" class="coming-soon">Features</a>
+  <a href="#how" class="coming-soon">How It Works</a>
+  <a href="#coverage" class="coming-soon">Coverage</a>
+  <a href="#" class="m-cta coming-soon">Download App</a>
+</div>
+
+<!-- ── HERO ──────────────────────────────────────── -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge fade-up visible">
+        <span class="hero-badge-dot"></span>
+        Now operating in Uyo, Akwa Ibom
+      </div>
+      <h1 class="fade-up visible" style="transition-delay:0.1s">
+        Move Around Uyo <span>Faster, Smarter</span> and Safer
+      </h1>
+      <p class="hero-sub fade-up visible" style="transition-delay:0.2s">
+        Request rides in seconds. Reliable drivers. Transparent pricing. Built exclusively for the people of Uyo.
+      </p>
+      <div class="hero-actions fade-up visible" style="transition-delay:0.3s">
+        <a href="#" class="btn-primary coming-soon">
+          <svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2C6.13 2 3 5.13 3 9c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="white"/></svg>
+          Request a Ride
+        </a>
+        <a href="#" class="btn-secondary coming-soon">
+          <svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="7" r="3.5" stroke="#0B6E4F" stroke-width="1.6"/><path d="M3 17c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="#0B6E4F" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Become a Driver
+        </a>
+      </div>
+      <div class="hero-trust fade-up visible" style="transition-delay:0.4s">
+        <div class="hero-trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L9.8 5.5H14.5L10.7 8.3L12.2 13L8 10.2L3.8 13L5.3 8.3L1.5 5.5H6.2L8 1Z" fill="#0B6E4F"/></svg>
+          </div>
+          Verified Drivers
+        </div>
+        <div class="hero-trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5L10 6H14.5L11 9L12.5 13.5L8 11L3.5 13.5L5 9L1.5 6H6L8 1.5Z" fill="#0B6E4F" opacity="0"/><rect x="2" y="7" width="12" height="2" rx="1" fill="#0B6E4F"/><rect x="7" y="2" width="2" height="12" rx="1" fill="#0B6E4F"/></svg>
+          </div>
+          No Hidden Fees
+        </div>
+        <div class="hero-trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#0B6E4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          100% Local
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="mockup-wrap fade-up visible" style="transition-delay:0.2s">
+      <div class="mockup-bg"></div>
+
+      <div class="floating-card fc-left">
+        <div class="fc-label">ETA</div>
+        <div class="fc-value fc-green">3 mins</div>
+      </div>
+      <div class="floating-card fc-right">
+        <div class="fc-label">Fare</div>
+        <div class="fc-value">&#8358;850</div>
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-notch">
+          <div class="notch-cam"></div>
+          <div class="notch-speaker"></div>
+        </div>
+        <div class="phone-screen">
+          <!-- Map -->
+          <div class="map-area">
+            <div class="map-grid"></div>
+            <!-- Roads -->
+            <div class="map-road-h" style="top:38%;left:0;right:0;"></div>
+            <div class="map-road-h" style="top:65%;left:0;right:0;"></div>
+            <div class="map-road-v" style="left:30%;top:0;bottom:0;"></div>
+            <div class="map-road-v" style="left:65%;top:0;bottom:0;"></div>
+            <!-- Pins -->
+            <div class="map-pin" style="left:28%;top:18%">
+              <div class="map-pin-dot" style="background:#0B6E4F"></div>
+              <div class="map-pin-line" style="background:#0B6E4F"></div>
+            </div>
+            <div class="map-pin" style="left:62%;top:50%">
+              <div class="map-pin-dot" style="background:#B8F04A"></div>
+              <div class="map-pin-line" style="background:#B8F04A"></div>
+            </div>
+            <!-- Car -->
+            <div class="car-icon" style="left:40%;top:34%">
+              <div class="car-dot"></div>
+            </div>
+            <!-- Label -->
+            <div style="position:absolute;bottom:8px;left:10px;font-size:9.5px;font-weight:600;color:#0B6E4F;background:rgba(255,255,255,0.9);padding:3px 8px;border-radius:4px;letter-spacing:0.02em;">LIVE TRACKING</div>
+          </div>
+
+          <!-- Booking fields -->
+          <div class="booking-card">
+            <div class="booking-field">
+              <div class="field-icon field-dot-green">
+                <svg viewBox="0 0 12 12" width="10" height="10"><circle cx="6" cy="6" r="3" fill="white"/></svg>
+              </div>
+              <div class="field-text">
+                Use Road, Uyo
+                <span>Pickup location</span>
+              </div>
+            </div>
+            <div class="booking-field">
+              <div class="field-icon field-dot-lime">
+                <svg viewBox="0 0 12 12" width="10" height="10"><path d="M6 1L7.5 4.5H11L8.25 6.75L9.5 10L6 8L2.5 10L3.75 6.75L1 4.5H4.5L6 1Z" fill="#0B6E4F"/></svg>
+              </div>
+              <div class="field-text">
+                Itam Market, Uyo
+                <span>Destination</span>
+              </div>
+            </div>
+            <div class="booking-footer">
+              <div class="booking-price">&#8358;1,200 est.</div>
+              <div class="booking-btn-sm">Confirm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ────────────────────────────────── -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <span class="section-label fade-up">Why UyoXpress</span>
+    <h2 class="fade-up">Built around your needs</h2>
+    <p class="section-sub fade-up">Everything you expect from a world-class ride-hailing service, designed specifically for life in Uyo.</p>
+
+    <div class="features-grid">
+      <div class="feat-card fade-up">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L4.5 13.5H11L10 22L19.5 10H13L13 2Z" fill="#0B6E4F"/>
+          </svg>
+        </div>
+        <h3>Fast Pickup</h3>
+        <p>Get matched with the nearest available driver instantly. Average wait time under 4 minutes across Uyo.</p>
+      </div>
+      <div class="feat-card fade-up">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#0B6E4F" stroke-width="2"/>
+            <path d="M12 7v5l3 3" stroke="#0B6E4F" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 15h6" stroke="#0B6E4F" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Affordable Pricing</h3>
+        <p>No hidden charges, no surge surprises. See your exact fare before you confirm — always transparent.</p>
+      </div>
+      <div class="feat-card fade-up">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L15.5 8.5L22 9.5L17 14.5L18.5 21L12 17.5L5.5 21L7 14.5L2 9.5L8.5 8.5L12 2Z" fill="#0B6E4F"/>
+          </svg>
+        </div>
+        <h3>Trusted Drivers</h3>
+        <p>Every driver goes through background screening, vehicle inspection, and rating-based reviews by riders.</p>
+      </div>
+      <div class="feat-card fade-up">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="3" width="14" height="18" rx="3" stroke="#0B6E4F" stroke-width="2"/>
+            <path d="M9 8h6M9 12h6M9 16h4" stroke="#0B6E4F" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Easy Booking</h3>
+        <p>A clean, simple interface built for every kind of user. Book your ride in under 30 seconds, every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ────────────────────────────── -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <span class="section-label fade-up">Simple Process</span>
+    <h2 class="fade-up">How it works</h2>
+    <p class="section-sub fade-up">Three steps. That is all it takes to get from where you are to where you need to be.</p>
+
+    <div class="steps-row">
+      <div class="step fade-up">
+        <div class="step-num">
+          <div class="step-num-inner">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="white"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h3>Enter your route</h3>
+          <p>Type your pickup location and destination. The app uses your GPS or you can type any address in Uyo.</p>
+        </div>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">
+          <div class="step-num-inner">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <circle cx="12" cy="12" r="4" fill="white"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h3>Get matched instantly</h3>
+          <p>Our system finds the closest verified driver and sends them your request. You see the fare upfront.</p>
+        </div>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">
+          <div class="step-num-inner">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M5 12h14M14 7l5 5-5 5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h3>Track and arrive safely</h3>
+          <p>Watch your driver approach on the live map. Complete your trip and rate your experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COVERAGE ────────────────────────────────── -->
+<section class="coverage" id="coverage">
+  <div class="section-inner coverage-inner">
+    <div>
+      <span class="section-label" style="color:rgba(255,255,255,0.5)">Local Coverage</span>
+      <h2>Built for Uyo. Designed for everyday movement.</h2>
+      <p class="coverage-sub">
+        From the busy corridors of Itam to the academic hub of UniUyo, UyoXpress connects every corner of Uyo with reliable, on-demand transportation.
+      </p>
+      <div class="area-tags">
+        <span class="area-tag">Itam</span>
+        <span class="area-tag">Ikot Ekpene Road</span>
+        <span class="area-tag">UniUyo</span>
+        <span class="area-tag">Ring Road</span>
+        <span class="area-tag">IBB Way</span>
+        <span class="area-tag">Aka Road</span>
+        <span class="area-tag">Ewet Housing</span>
+        <span class="area-tag">Shelter Afrique</span>
+        <span class="area-tag">Nung Udoe</span>
+        <span class="area-tag">Uyo Township</span>
+      </div>
+    </div>
+
+    <!-- City SVG illustration -->
+    <div class="city-illustration">
+      <svg viewBox="0 0 420 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <!-- Sky -->
+        <rect width="420" height="220" fill="rgba(255,255,255,0.03)"/>
+        <!-- Stars -->
+        <circle cx="40" cy="30" r="1.5" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="120" cy="20" r="1" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="200" cy="35" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="310" cy="15" r="1" fill="rgba(255,255,255,0.35)"/>
+        <circle cx="380" cy="28" r="1.5" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="70" cy="60" r="1" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="260" cy="45" r="1.2" fill="rgba(255,255,255,0.3)"/>
+
+        <!-- Ground -->
+        <rect y="220" width="420" height="60" fill="rgba(0,0,0,0.2)"/>
+        <!-- Road -->
+        <rect y="225" width="420" height="14" fill="rgba(0,0,0,0.3)"/>
+        <!-- Lane markings -->
+        <rect x="20" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="70" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="120" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="170" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="220" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="270" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="320" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="370" y="230" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+
+        <!-- Buildings back row -->
+        <rect x="10" y="130" width="45" height="90" rx="2" fill="rgba(255,255,255,0.06)"/>
+        <rect x="12" y="140" width="8" height="8" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="23" y="140" width="8" height="8" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="34" y="140" width="8" height="8" rx="1" fill="rgba(184,240,74,0.25)"/>
+        <rect x="12" y="155" width="8" height="8" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="23" y="155" width="8" height="8" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="34" y="155" width="8" height="8" rx="1" fill="rgba(255,255,255,0.08)"/>
+
+        <rect x="65" y="100" width="60" height="120" rx="2" fill="rgba(255,255,255,0.08)"/>
+        <rect x="68" y="108" width="10" height="10" rx="1" fill="rgba(184,240,74,0.3)"/>
+        <rect x="82" y="108" width="10" height="10" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="96" y="108" width="10" height="10" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="68" y="124" width="10" height="10" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="82" y="124" width="10" height="10" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="96" y="124" width="10" height="10" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="68" y="140" width="10" height="10" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="82" y="140" width="10" height="10" rx="1" fill="rgba(255,255,255,0.06)"/>
+        <rect x="96" y="140" width="10" height="10" rx="1" fill="rgba(184,240,74,0.15)"/>
+        <!-- Antenna -->
+        <rect x="91" y="90" width="2" height="12" fill="rgba(255,255,255,0.2)"/>
+        <circle cx="92" cy="89" r="2" fill="rgba(184,240,74,0.8)"/>
+
+        <!-- Center tall building -->
+        <rect x="175" y="60" width="70" height="160" rx="3" fill="rgba(255,255,255,0.1)"/>
+        <rect x="179" y="70" width="13" height="13" rx="1" fill="rgba(184,240,74,0.35)"/>
+        <rect x="196" y="70" width="13" height="13" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="213" y="70" width="13" height="13" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="179" y="90" width="13" height="13" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="196" y="90" width="13" height="13" rx="1" fill="rgba(184,240,74,0.25)"/>
+        <rect x="213" y="90" width="13" height="13" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="179" y="110" width="13" height="13" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="196" y="110" width="13" height="13" rx="1" fill="rgba(255,255,255,0.06)"/>
+        <rect x="213" y="110" width="13" height="13" rx="1" fill="rgba(184,240,74,0.3)"/>
+        <rect x="179" y="130" width="13" height="13" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="196" y="130" width="13" height="13" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="213" y="130" width="13" height="13" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="179" y="150" width="13" height="13" rx="1" fill="rgba(255,255,255,0.06)"/>
+        <rect x="196" y="150" width="13" height="13" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="213" y="150" width="13" height="13" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <!-- Roof detail -->
+        <rect x="200" y="48" width="20" height="14" rx="2" fill="rgba(255,255,255,0.08)"/>
+        <rect x="208" y="38" width="4" height="12" fill="rgba(255,255,255,0.15)"/>
+        <circle cx="210" cy="37" r="3" fill="rgba(184,240,74,1)"/>
+
+        <!-- Right buildings -->
+        <rect x="260" y="110" width="55" height="110" rx="2" fill="rgba(255,255,255,0.07)"/>
+        <rect x="263" y="118" width="10" height="10" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="277" y="118" width="10" height="10" rx="1" fill="rgba(184,240,74,0.3)"/>
+        <rect x="291" y="118" width="10" height="10" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="263" y="134" width="10" height="10" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="277" y="134" width="10" height="10" rx="1" fill="rgba(255,255,255,0.06)"/>
+        <rect x="291" y="134" width="10" height="10" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <rect x="263" y="150" width="10" height="10" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="277" y="150" width="10" height="10" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="291" y="150" width="10" height="10" rx="1" fill="rgba(184,240,74,0.25)"/>
+
+        <rect x="325" y="140" width="50" height="80" rx="2" fill="rgba(255,255,255,0.06)"/>
+        <rect x="328" y="148" width="9" height="9" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="341" y="148" width="9" height="9" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="354" y="148" width="9" height="9" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="328" y="163" width="9" height="9" rx="1" fill="rgba(255,255,255,0.06)"/>
+        <rect x="341" y="163" width="9" height="9" rx="1" fill="rgba(184,240,74,0.3)"/>
+        <rect x="354" y="163" width="9" height="9" rx="1" fill="rgba(255,255,255,0.1)"/>
+
+        <rect x="380" y="120" width="40" height="100" rx="2" fill="rgba(255,255,255,0.07)"/>
+        <rect x="383" y="128" width="8" height="8" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="394" y="128" width="8" height="8" rx="1" fill="rgba(184,240,74,0.25)"/>
+        <rect x="383" y="142" width="8" height="8" rx="1" fill="rgba(184,240,74,0.2)"/>
+        <rect x="394" y="142" width="8" height="8" rx="1" fill="rgba(255,255,255,0.08)"/>
+
+        <!-- Car on road -->
+        <rect x="60" y="226" width="36" height="18" rx="4" fill="rgba(184,240,74,0.9)"/>
+        <rect x="66" y="222" width="24" height="10" rx="3" fill="rgba(184,240,74,0.7)"/>
+        <circle cx="68" cy="244" r="4" fill="rgba(0,0,0,0.4)"/>
+        <circle cx="88" cy="244" r="4" fill="rgba(0,0,0,0.4)"/>
+        <!-- Headlights -->
+        <rect x="94" y="229" width="4" height="5" rx="2" fill="rgba(255,255,255,0.8)"/>
+
+        <!-- Second car -->
+        <rect x="280" y="226" width="34" height="17" rx="4" fill="rgba(255,255,255,0.12)"/>
+        <rect x="286" y="222" width="22" height="9" rx="3" fill="rgba(255,255,255,0.08)"/>
+        <circle cx="287" cy="243" r="3.5" fill="rgba(0,0,0,0.3)"/>
+        <circle cx="305" cy="243" r="3.5" fill="rgba(0,0,0,0.3)"/>
+
+        <!-- UyoXpress label on building -->
+        <rect x="185" y="192" width="50" height="16" rx="3" fill="rgba(184,240,74,0.15)"/>
+        <text x="210" y="204" font-family="'Syne', sans-serif" font-size="7" font-weight="700" fill="rgba(184,240,74,0.8)" text-anchor="middle" letter-spacing="0.5">UYOXPRESS</text>
+
+        <!-- Moon -->
+        <path d="M360 45 A18 18 0 1 0 360 81 A12 12 0 1 1 360 45Z" fill="rgba(255,255,255,0.12)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ──────────────────────────────── -->
+<section class="cta-banner">
+  <div class="section-inner" style="text-align:center">
+    <span class="section-label fade-up" style="color:rgba(255,255,255,0.4)">Ready to ride?</span>
+    <h2 class="fade-up">Start Your <span>Ride</span> Today</h2>
+    <p class="fade-up">Download the app and get your first ride at a special introductory rate across Uyo.</p>
+    <a href="#" class="btn-lime coming-soon fade-up">
+      <svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2C6.13 2 3 5.13 3 9c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="#084F38"/></svg>
+      Book Now
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-dot"></span>UyoXpress
+        </a>
+        <p>Uyo's most reliable ride-hailing service. Safe, fast, and transparent transportation across Akwa Ibom State.</p>
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <a href="#" class="coming-soon" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+            <svg viewBox="0 0 20 20" fill="rgba(255,255,255,0.5)" width="16" height="16"><path d="M18 2h-3.5A4.5 4.5 0 0010 6.5V8H7v3h3v9h3v-9h3l.5-3H13V6.5a1.5 1.5 0 011.5-1.5H18V2z"/></svg>
+          </a>
+          <a href="#" class="coming-soon" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+            <svg viewBox="0 0 20 20" fill="rgba(255,255,255,0.5)" width="16" height="16"><path d="M20 4a2 2 0 01-2 2h-.08a5 5 0 01-4.92 4H10v2h3a1 1 0 010 2h-3v2h3a1 1 0 010 2h-4a1 1 0 01-1-1v-3H6a1 1 0 010-2h2v-2H6a1 1 0 010-2h2V9a7 7 0 017-7h3a2 2 0 012 2z"/></svg>
+          </a>
+          <a href="#" class="coming-soon" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+            <svg viewBox="0 0 20 20" fill="rgba(255,255,255,0.5)" width="16" height="16"><path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm3.17 11.17L9 9V5h1.5v3.5l3.67 3.67-1 1z" fill="none"/><circle cx="10" cy="10" r="8" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/><path d="M10 6v4l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#" class="coming-soon">About Us</a></li>
+          <li><a href="#" class="coming-soon">Careers</a></li>
+          <li><a href="#" class="coming-soon">Press</a></li>
+          <li><a href="#" class="coming-soon">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Riders</h4>
+        <ul>
+          <li><a href="#" class="coming-soon">Download App</a></li>
+          <li><a href="#" class="coming-soon">How It Works</a></li>
+          <li><a href="#" class="coming-soon">Safety</a></li>
+          <li><a href="#" class="coming-soon">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#" class="coming-soon">Terms of Service</a></li>
+          <li><a href="#" class="coming-soon">Privacy Policy</a></li>
+          <li><a href="#" class="coming-soon">Contact Us</a></li>
+          <li><a href="#" class="coming-soon">Support</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 UyoXpress. All rights reserved. Uyo, Akwa Ibom State, Nigeria.</p>
+      <p class="footer-credit">Developed by <span>David Akpan</span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ── MODAL ────────────────────────────────────── -->
+<div class="modal-overlay" id="csModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
+        <path d="M16 4L19.5 12H28L21.5 17L24.5 25L16 20L7.5 25L10.5 17L4 12H12.5L16 4Z" fill="#0B6E4F"/>
+      </svg>
+    </div>
+    <h3>Coming Soon</h3>
+    <p>UyoXpress is launching soon across Uyo. Be the first to know when we go live — drop your details and we will reach out.</p>
+    <button class="modal-close" id="closeModal">Got it</button>
+  </div>
+</div>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+    const spans = hamburger.querySelectorAll('span');
+    if (mobileMenu.classList.contains('open')) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+      spans[0].style.transform = '';
+      spans[1].style.opacity = '';
+      spans[2].style.transform = '';
+    }
+  });
+
+  // Close mobile menu on link click
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      const spans = hamburger.querySelectorAll('span');
+      spans[0].style.transform = '';
+      spans[1].style.opacity = '';
+      spans[2].style.transform = '';
+    });
+  });
+
+  // Coming soon modal
+  const modal = document.getElementById('csModal');
+  const closeBtn = document.getElementById('closeModal');
+
+  document.querySelectorAll('.coming-soon').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      modal.classList.add('active');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (href.length > 1) {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
